@@ -1,0 +1,1 @@
+This is a simple textual test file. It will test if the proxy is working properly and the file is sent uncorrupted, at this point i'm just writing stuff to make the file longer and stuff.
