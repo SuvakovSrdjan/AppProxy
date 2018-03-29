@@ -2,6 +2,7 @@
 #include "mytcpclient.h"
 
 #define FILENAME "../File.txt"
+#define BAD_SERVER_ADDRESS "1111.1111.1111.1111"
 #define SERVER_ADDRESS "127.0.0.1"
 #define REMOTE_SERVER_ADDRESS "127.0.0.1"
 #define REMOTE_SERVER_PORT 9021

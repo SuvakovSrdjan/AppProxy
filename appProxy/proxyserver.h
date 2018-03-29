@@ -30,6 +30,8 @@ public slots:
     void readyRead();
 private:
     bool authenticationDone;
+    bool methodSupported;
+    bool usernamePassCorrect;
     QTcpServer *server;
     ProxyClient client;
     QHash<QTcpSocket*, QByteArray*> buffers; //We need a buffer to store data until block has completely received

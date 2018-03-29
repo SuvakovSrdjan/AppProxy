@@ -32,7 +32,6 @@ bool MyTcpClient::authentication(QString username, QString password)
     }
     else
     {
-        qDebug()<<"Authentication Fail!! ";
         return false;
     }
 }
@@ -45,7 +44,6 @@ bool MyTcpClient::authMedtodRequest(qint32 method)
     socket->waitForReadyRead();
     QByteArray buffer = socket->readAll();
     qint32 response = ArrayToInt(buffer);
-    qDebug()<<"Response from proxy => "<<response;
     if(response == 1)
     {
         qDebug()<<"Method supported";
@@ -53,28 +51,27 @@ bool MyTcpClient::authMedtodRequest(qint32 method)
     }
     else
     {
-        qDebug()<<"Method not supported";
         return false;
     }
 
 }
 bool MyTcpClient::connectToRemoteHost(QString host, qint32 port)
 {
+    qDebug()<<"Sending remote host address";
     socket->write(host.toLocal8Bit());
     socket->waitForBytesWritten();
     socket->waitForReadyRead();
     QByteArray buffer = socket->readAll();
     qint32 response = ArrayToInt(buffer);
-    qDebug()<<"Response from proxy => "<<response;
     if(response == 1)
     {
         qDebug()<<"Address sent";
+        qDebug()<<"Sending remote host port";
         socket->write(IntToArray(port));
         socket->waitForBytesWritten();
         socket->waitForReadyRead();
         buffer = socket->readAll();
         response = ArrayToInt(buffer);
-        qDebug()<<"Response from proxy => "<<response;
         if(response == 1)
         {
             qDebug()<<"connected to remote host";
@@ -82,7 +79,6 @@ bool MyTcpClient::connectToRemoteHost(QString host, qint32 port)
         }
         else
         {
-            qDebug()<<"could not connect to remote host";
             return false;
         }
 
@@ -97,13 +93,13 @@ bool MyTcpClient::connectToRemoteHost(QString host, qint32 port)
 
 void MyTcpClient::sendUsername(QString username, QString password)
 {
+    qDebug()<<"Sending Username";
     connect(this, SIGNAL(usernameCorrect(QString)), this, SLOT(sendPassword(QString)));
     socket->write(username.toLocal8Bit());
     socket->waitForBytesWritten();
     socket->waitForReadyRead();
     QByteArray buffer = socket->readAll();
     qint32 response = ArrayToInt(buffer);
-    qDebug()<<"Response from proxy => "<<response;
     if(response == 1)
     {
         qDebug()<<"Username ok";
@@ -119,12 +115,12 @@ void MyTcpClient::sendUsername(QString username, QString password)
 
 void MyTcpClient::sendPassword(QString password)
 {
+    qDebug()<<"Sending password";
     socket->write(password.toLocal8Bit());
     socket->waitForBytesWritten();
     socket->waitForReadyRead();
     QByteArray buffer = socket->readAll();
     qint32 response = ArrayToInt(buffer);
-    qDebug()<<"Response from proxy => "<<response;
     if(response == 1)
     {
         qDebug()<<"Password ok";

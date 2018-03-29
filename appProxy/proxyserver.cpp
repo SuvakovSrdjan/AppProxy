@@ -49,6 +49,8 @@ void ProxyServer::authentication()
         {
             qDebug()<<"Password correct";
             socket->write(IntToArray(1));
+            this->connectToRemoteHost();
+
         }
         else
         {
@@ -104,6 +106,7 @@ void ProxyServer::connectToRemoteHost()
     }
     else
     {
+        qDebug()<<"Could not connect to remote host"<<host<<port;
         socket->write(IntToArray(0));
     }
 
@@ -121,6 +124,7 @@ void ProxyServer::authMethodConfirmation()
     {
         qDebug()<<"Method supported";
         socket->write(IntToArray(1));
+        this->authentication();
     }
     else
     {
@@ -145,17 +149,21 @@ void ProxyServer::disconnected()
 
 void ProxyServer::readyRead()
 {
-
+    QTcpSocket *socket = static_cast<QTcpSocket*>(sender());
     if(!authenticationDone)
     {
         this->authMethodConfirmation();
-        this->authentication();
-        qDebug()<<"Authentication done";
-        qDebug()<<"===================";
-        this->connectToRemoteHost();
+        if(authenticationDone)
+        {
+            qDebug()<<"Authentication done";
+            qDebug()<<"===================";
+            qDebug()<<"waiting for client";
+        }
+        else
+        {
+            qDebug()<<"Authentication failed";
+        }
     }
-    qDebug()<<"recieving data";
-    QTcpSocket *socket = static_cast<QTcpSocket*>(sender());
     QByteArray *buffer = buffers.value(socket);
     qint32 *s = sizes.value(socket);
     qint32 size = *s;
